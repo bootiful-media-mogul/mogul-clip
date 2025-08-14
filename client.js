@@ -8,29 +8,36 @@ console.log('Available APIs:', {
 })
 
 
+/**
+ * either loads saved authentication or opens a new tab and authenticates.
+ */
 async function attemptAuthentication() {
-    const authenticatedUserInStorage = await chrome.storage.local.get(['url', 'cookie', 'name']);
-    if (authenticatedUserInStorage == null || authenticatedUserInStorage.cookie == null) {
-        async function authenticateForUri(uri) {
-            let authTab
-            const tabs = await chrome.tabs.query({url: uri + '/*'});
-            if (tabs.length > 0) {
-                authTab = tabs[0];
-            } //
-            else {
-                authTab = await chrome.tabs.create({
-                    url: uri
-                });
-            }
-            const cookie = await chrome.cookies.get({url: uri, name: 'SESSION'})
-            const cookieValue = cookie?.value
-            return {
-                uri,
-                cookieValue,
-                authTab
-            }
-        }
 
+    async function authenticateForUri(uri) {
+        let authTab
+        const tabs = await chrome.tabs.query({url: uri + '/*'});
+        if (tabs.length > 0) {
+            authTab = tabs[0];
+        } //
+        else {
+            authTab = await chrome.tabs.create({
+                url: uri
+            });
+        }
+        const cookie = await chrome.cookies.get({url: uri, name: 'SESSION'})
+        const cookieValue = cookie?.value
+        return {
+            uri,
+            cookieValue,
+            authTab
+        }
+    }
+
+    const authenticatedUserInStorage = await chrome.storage.local.get(
+        ['url', 'cookie', 'name']
+    );
+
+    if (authenticatedUserInStorage == null || authenticatedUserInStorage.cookie == null) {
         const auth = await authenticateForUri(APP_URL)
         const u = await user(auth)
         await chrome.storage.local.set({
@@ -56,7 +63,12 @@ async function user(auth) {
 window.addEventListener('load', async () => {
     const user = await attemptAuthentication()
     document.getElementsByClassName('user')[0].innerText = user.name
+    const activeTab = await getActiveTab();
+    console.log(activeTab)
+    document.getElementsByClassName('clip-uri')[0].innerText = activeTab.url
+
 })
+
 
 async function graphql(uri, cookie, query) {
     try {
@@ -81,4 +93,9 @@ async function graphql(uri, cookie, query) {
         console.error('Network error:', error);
         return null;
     }
+}
+
+async function getActiveTab() {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    return tab;
 }
