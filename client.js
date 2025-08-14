@@ -1,4 +1,6 @@
-const APP_URL = 'http://127.0.0.1:1010'
+const APP_URL = 'https://studio.media-mogul.io'
+
+// const APP_URL = 'http://127.0.0.1:1010'
 
 console.log('Available APIs:', {
     scripting: !!chrome.scripting,
@@ -62,10 +64,11 @@ async function user(auth) {
 
 window.addEventListener('load', async () => {
     const user = await attemptAuthentication()
-    document.getElementsByClassName('user')[0].innerText = user.name
     const tab = await activeTab();
-    console.log(tab)
+    document.getElementsByClassName('user')[0].innerText = user.name
     document.getElementsByClassName('clip-uri')[0].innerText = tab.url
+    document.getElementsByClassName('clip-cookie')[0].innerText = user.cookie
+    console.log(tab)
 
 })
 
