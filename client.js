@@ -1,6 +1,7 @@
 const authButton = document.getElementsByClassName('openAuthenticationAction')[0];
 
-const APP_URLS = ['http://127.0.0.1:1010', 'https://media-mogul.io', 'https://api.media-mogul.io']
+// , 'https://media-mogul.io', 'https://api.media-mogul.io'
+const APP_URLS = ['http://127.0.0.1:1010']
 
 console.log('Available APIs:', {
     scripting: !!chrome.scripting,
@@ -10,16 +11,14 @@ console.log('Available APIs:', {
 })
 
 async function authenticateForUri(uri) {
-
     let authTab
-    const tabs = await chrome.tabs.query({url: [uri].map(url => url + '/*')});
-
+    const tabs = await chrome.tabs.query({url: uri + '/*'});
     if (tabs.length > 0) {
         authTab = tabs[0];
     } //
     else {
         authTab = await chrome.tabs.create({
-            url: `${APP_URLS}`
+            url: uri
         });
     }
 
@@ -30,7 +29,6 @@ async function authenticateForUri(uri) {
         func: () => {
             return {
                 url: window.location.href,
-
             }
         }
     })
@@ -40,14 +38,9 @@ async function authenticateForUri(uri) {
 }
 
 async function authenticate() {
-
     for (let uriIndx in APP_URLS) {
-        const uri = APP_URLS[uriIndx];
-        console.log('uri is ', uriIndx, 'and the url is', uri)
-        await authenticateForUri(uri)
+        await authenticateForUri( APP_URLS[uriIndx])
     }
-
-
 }
 
 window.addEventListener('load', authenticate)
