@@ -63,9 +63,9 @@ async function user(auth) {
 window.addEventListener('load', async () => {
     const user = await attemptAuthentication()
     document.getElementsByClassName('user')[0].innerText = user.name
-    const activeTab = await getActiveTab();
-    console.log(activeTab)
-    document.getElementsByClassName('clip-uri')[0].innerText = activeTab.url
+    const tab = await activeTab();
+    console.log(tab)
+    document.getElementsByClassName('clip-uri')[0].innerText = tab.url
 
 })
 
@@ -95,7 +95,7 @@ async function graphql(uri, cookie, query) {
     }
 }
 
-async function getActiveTab() {
+async function activeTab() {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     return tab;
 }
