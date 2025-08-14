@@ -5,10 +5,16 @@
   "description": "clip content to the Mogul system",
   "permissions": [
     "activeTab",
+    "storage",
+    "scripting",
+    "tabs",
+    "cookies",
     "storage"
   ],
   "host_permissions": [
-    "https://your-api-domain.com/*"
+    "http://127.0.0.1:8080/*",
+    "https://api.media-mogul.io/*",
+    "https://media-mogul.io/*"
   ],
   "action": {
     "default_popup": "client.html",

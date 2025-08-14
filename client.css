@@ -1,3 +1,7 @@
+body {
+    /*background-color: red ;*/
+}
+/*
 * {
   margin: 0;
   padding: 0;
@@ -227,7 +231,7 @@ body {
   box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.1);
 }
 
-/* Success View */
+!* Success View *!
 .success-icon {
   width: 60px;
   height: 60px;
@@ -261,7 +265,7 @@ body {
   padding: 10px 24px;
 }
 
-/* Loading state */
+!* Loading state *!
 .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -270,4 +274,4 @@ body {
 .btn:disabled:hover {
   transform: none;
   box-shadow: none;
-}
+}*/

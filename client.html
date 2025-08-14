@@ -1,13 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>URL Saver</title>
-  <link rel="stylesheet" href="client.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Saver</title>
 </head>
 <body>
-  <!-- Login View -->
+
+<div class="loggedOutView">
+
+    <p> you're logged out. please
+        <a class="openAuthenticationAction" href="#">click here</a>
+        to open up a tab for authentication. you'll be directed  to log in.
+
+        when you're done, open up this plugin again
+        and click here:
+
+        <a class="imReadyAction" href="#"> I'm Ready!</a>.
+
+    </p>
+</div>
+
+<!--
+  &lt;!&ndash; Login View &ndash;&gt;
   <div id="loginView" class="view">
     <div class="header">
       <h2>URL Saver</h2>
@@ -35,7 +50,7 @@
     </div>
   </div>
 
-  <!-- Logged In View -->
+  &lt;!&ndash; Logged In View &ndash;&gt;
   <div id="loggedInView" class="view" style="display: none;">
     <div class="header">
       <h2>Save Page</h2>
@@ -75,7 +90,7 @@
     <div id="saveStatus" class="status-message"></div>
   </div>
 
-  <!-- Success View -->
+  &lt;!&ndash; Success View &ndash;&gt;
   <div id="successView" class="view" style="display: none;">
     <div class="success-icon">✓</div>
     <h3>Page Saved!</h3>
@@ -83,6 +98,8 @@
     <button id="closeBtn" class="btn btn-secondary">Close</button>
   </div>
 
-  <script src="client.js"></script>
+-->
+<link rel="stylesheet" href="client.css" />
+<script src="client.js"></script>
 </body>
 </html>

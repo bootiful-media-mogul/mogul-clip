@@ -1,10 +1,102 @@
+const authButton = document.getElementsByClassName('openAuthenticationAction')[0];
+
+const APP_URLS = ['http://127.0.0.1:1010', 'https://media-mogul.io', 'https://api.media-mogul.io']
+
+console.log('Available APIs:', {
+    scripting: !!chrome.scripting,
+    tabs: !!chrome.tabs,
+    cookies: !!chrome.cookies,
+    storage: !!chrome.storage
+})
+
+async function authenticateForUri(uri) {
+
+    let authTab
+    const tabs = await chrome.tabs.query({url: [uri].map(url => url + '/*')});
+
+    if (tabs.length > 0) {
+        authTab = tabs[0];
+    } //
+    else {
+        authTab = await chrome.tabs.create({
+            url: `${APP_URLS}`
+        });
+    }
+
+    console.log('authTab is ', authTab.url, 'and the id is', authTab.id)
+
+    const result = await chrome.scripting.executeScript({
+        target: {tabId: authTab.id},
+        func: () => {
+            return {
+                url: window.location.href,
+
+            }
+        }
+    })
+
+    console.log('result is ', result)
+
+}
+
+async function authenticate() {
+
+    for (let uriIndx in APP_URLS) {
+        const uri = APP_URLS[uriIndx];
+        console.log('uri is ', uriIndx, 'and the url is', uri)
+        await authenticateForUri(uri)
+    }
+
+
+}
+
+window.addEventListener('load', authenticate)
+
+
+authButton.addEventListener('click', async () => {
+
+
+    //
+    // // Poll for completion
+    // const pollInterval = setInterval(async () => {
+    //     try {
+    //         // Check if tab still exists and its URL
+    //         const tab = await chrome.tabs.get(authTab.id);
+    //
+    //         // If user completed auth and is now on dashboard/home
+    //         if (tab.url.includes('/dashboard') ||
+    //             tab.url.includes('/home') ||
+    //             tab.url.includes('/auth/success')) {
+    //
+    //             // Execute script to grab token
+    //             const results = await chrome.scripting.executeScript({
+    //                 target: { tabId: authTab.id },
+    //                 func: () => localStorage.getItem('auth_token')
+    //             });
+    //
+    //             if (results[0]?.result) {
+    //                 // Got token!
+    //                 clearInterval(pollInterval);
+    //                 chrome.tabs.remove(authTab.id);
+    //                 loadApp(results[0].result);
+    //             }
+    //         }
+    //     } catch (e) {
+    //         // Tab was closed
+    //         clearInterval(pollInterval);
+    //     }
+    // }, 1000);
+});
+/*
+
+
 // Configuration
 const API_BASE_URL = 'https://your-api-domain.com'; // Replace with your API URL
 
 // View management
 const views = {
-  login: document.getElementById('loginView'),
-  loggedIn: document.getElementById('loggedInView'),
+  console.login: document.getElementById('console.loginView'),
+  console.loggedIn: document.getElementById('console.loggedInView'),
   success: document.getElementById('successView')
 };
 
@@ -12,21 +104,21 @@ const views = {
 document.addEventListener('DOMContentLoaded', async () => {
   const token = await getStoredToken();
   if (token) {
-    showLoggedInView();
+    showconsole.loggedInView();
   } else {
-    showLoginView();
+    showconsole.loginView();
   }
 });
 
 // Show/hide views
-function showLoginView() {
+function showconsole.loginView() {
   Object.values(views).forEach(v => v.style.display = 'none');
-  views.login.style.display = 'flex';
+  views.console.login.style.display = 'flex';
 }
 
-function showLoggedInView() {
+function showconsole.loggedInView() {
   Object.values(views).forEach(v => v.style.display = 'none');
-  views.loggedIn.style.display = 'flex';
+  views.console.loggedIn.style.display = 'flex';
   loadCurrentPageInfo();
 }
 
@@ -56,13 +148,13 @@ async function clearStoredToken() {
   });
 }
 
-// Login form handler
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
+// console.login form handler
+document.getElementById('console.loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
-  const errorDiv = document.getElementById('loginError');
+  const errorDiv = document.getElementById('console.loginError');
   const submitBtn = e.target.querySelector('button[type="submit"]');
   
   // Disable button and show loading state
@@ -71,7 +163,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   errorDiv.classList.remove('show');
   
   try {
-    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+    const response = await fetch(`${API_BASE_URL}/api/auth/console.login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -83,7 +175,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     
     if (response.ok && data.token) {
       await setStoredToken(data.token);
-      showLoggedInView();
+      showconsole.loggedInView();
     } else {
       errorDiv.textContent = data.message || 'Invalid email or password';
       errorDiv.classList.add('show');
@@ -156,7 +248,7 @@ async function savePage(closeAfter = false) {
     } else if (response.status === 401) {
       // Token expired
       await clearStoredToken();
-      showLoginView();
+      showconsole.loginView();
     } else {
       const data = await response.json();
       statusDiv.textContent = data.message || 'Failed to save page';
@@ -176,9 +268,9 @@ async function savePage(closeAfter = false) {
 document.getElementById('saveBtn').addEventListener('click', () => savePage(false));
 document.getElementById('saveAndCloseBtn').addEventListener('click', () => savePage(true));
 
-document.getElementById('logoutBtn').addEventListener('click', async () => {
+document.getElementById('console.logoutBtn').addEventListener('click', async () => {
   await clearStoredToken();
-  showLoginView();
+  showconsole.loginView();
 });
 
 document.getElementById('closeBtn').addEventListener('click', () => {
@@ -203,4 +295,4 @@ document.getElementById('notes').addEventListener('keypress', (e) => {
     e.preventDefault();
     savePage(false);
   }
-});
+});*/
