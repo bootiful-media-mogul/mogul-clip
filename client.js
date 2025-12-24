@@ -1,6 +1,6 @@
-const APP_URL = 'https://studio.media-mogul.io'
+// const APP_URL = 'https://studio.media-mogul.io'
 
-// const APP_URL = 'http://127.0.0.1:1010'
+const APP_URL = 'http://127.0.0.1:1010'
 
 console.log('Available APIs:', {
     scripting: !!chrome.scripting,
@@ -69,9 +69,7 @@ window.addEventListener('load', async () => {
     document.getElementsByClassName('clip-uri')[0].innerText = tab.url
     document.getElementsByClassName('clip-cookie')[0].innerText = user.cookie
     console.log(tab)
-
 })
-
 
 async function graphql(uri, cookie, query) {
     try {
